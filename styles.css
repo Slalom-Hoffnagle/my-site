@@ -31,10 +31,26 @@ h2 { font-size: clamp(36px, 4.5vw, 66px); letter-spacing: -.045em; }
 .nav a:hover, .nav a[aria-current="page"] { border-color: var(--ink); }
 
 /* Home hero */
-.hero { position: relative; min-height: 690px; padding: 7.5vw 4.4vw 56px; display: flex; flex-direction: column; justify-content: space-between; background: var(--acid); }
-.hero::after { content: ""; position: absolute; width: 39vw; height: 39vw; max-width: 540px; max-height: 540px; border-radius: 50%; right: -8vw; top: 7vw; background: var(--coral); mix-blend-mode: multiply; }
+.hero { --hero-bg: var(--acid); --weather-main: var(--coral); --weather-detail: #f7c948; position: relative; min-height: 690px; padding: 7.5vw 4.4vw 56px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; background: var(--hero-bg); transition: background .35s ease; }
+.hero::before, .hero::after { content: ""; position: absolute; pointer-events: none; }
+.hero::after { width: 39vw; height: 39vw; max-width: 540px; max-height: 540px; border-radius: 50%; right: -8vw; top: 7vw; background: var(--weather-main); mix-blend-mode: multiply; transition: background .35s ease, border-radius .35s ease, transform .35s ease; }
+.hero::before { width: 24vw; height: 8vw; right: 19vw; top: 20vw; border-radius: 50%; background: var(--weather-detail); opacity: .8; transform: rotate(-12deg); transition: background .35s ease, opacity .35s ease, transform .35s ease; }
+.hero-weather-cloud { --hero-bg: #d9e1df; --weather-main: #7f969e; --weather-detail: #b9c8ca; }
+.hero-weather-cloud::after { border-radius: 42% 58% 55% 45%; transform: rotate(-8deg); }
+.hero-weather-cloud::before { border-radius: 50%; opacity: .9; transform: rotate(12deg); }
+.hero-weather-rain { --hero-bg: #c9dce5; --weather-main: #648fa8; --weather-detail: #dcebef; }
+.hero-weather-rain::after { border-radius: 52% 48% 42% 58%; transform: rotate(12deg); }
+.hero-weather-rain::before { width: 20vw; height: 12vw; border-radius: 50%; opacity: .75; transform: rotate(-18deg); box-shadow: -5vw 3vw 0 -1vw var(--weather-detail), 5vw 2vw 0 -1.5vw var(--weather-detail); }
+.hero-weather-snow { --hero-bg: #dfe8ed; --weather-main: #8daabd; --weather-detail: #f5f8fa; }
+.hero-weather-snow::after { border-radius: 47% 53% 60% 40%; transform: rotate(-15deg); }
+.hero-weather-snow::before { width: 19vw; height: 19vw; right: 23vw; top: 16vw; border-radius: 18%; opacity: .9; transform: rotate(45deg); box-shadow: 7vw 5vw 0 -2vw var(--weather-detail), -5vw 7vw 0 -3vw var(--weather-detail); }
 .hero-copy { position: relative; z-index: 1; max-width: 1050px; }
 h1 { margin: 20px 0 22px; max-width: 960px; font-size: clamp(54px, 8.8vw, 137px); letter-spacing: -.055em; line-height: .91; }
+.weather-card { position: relative; z-index: 1; align-self: flex-end; width: min(100%, 260px); margin: 22px 8vw 30px 0; padding: 18px 20px 20px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); }
+.weather-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.weather-icon { font-size: 29px; line-height: .9; }
+.weather-reading { margin-top: 22px; font-size: 42px; line-height: .95; letter-spacing: -.05em; }
+.weather-condition { min-height: 18px; margin-top: 10px; color: var(--muted); font-size: 13px; }
 .hero-bottom { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; }
 .intro { max-width: 365px; font-size: 18px; line-height: 1.4; }
 .scroll-link { display: inline-flex; gap: 12px; align-items: center; font-family: "DM Mono", monospace; font-size: 11px; text-transform: uppercase; }
@@ -80,6 +96,7 @@ h1 { margin: 20px 0 22px; max-width: 960px; font-size: clamp(54px, 8.8vw, 137px)
 	.hero { min-height: 650px; padding: 16vw 5vw 32px; }
 	.hero::after { width: 68vw; height: 68vw; right: -18vw; top: 25vw; }
 	h1 { font-size: clamp(52px, 15vw, 82px); }
+	.weather-card { align-self: stretch; width: auto; margin: 18px 0 28px; }
 	.hero-bottom { align-items: flex-start; flex-direction: column; }
 	.section { padding: 70px 5vw; }
 	.section-head { margin-bottom: 30px; }

@@ -27,11 +27,19 @@
 		</header>
 
 		<main id="top">
-			<section class="hero" aria-labelledby="intro-heading">
+			<section class="hero hero-weather-sunny" aria-labelledby="intro-heading">
 				<div class="hero-copy">
 					<div class="eyebrow">Independent designer / 2026</div>
 					<h1 id="intro-heading">I make <em>useful</em> things feel inevitable.</h1>
 				</div>
+				<aside class="weather-card" aria-labelledby="weather-heading">
+					<div class="weather-card-top">
+						<span class="eyebrow" id="weather-heading">Local weather</span>
+						<span class="weather-icon" id="weather-icon" aria-hidden="true">&#9729;</span>
+					</div>
+					<div class="weather-reading" id="weather-reading" aria-live="polite">Finding your weather...</div>
+					<div class="weather-condition" id="weather-condition">Allow location access to continue</div>
+				</aside>
 				<div class="hero-bottom">
 					<p class="intro">Carl Hoffnagle is a designer working at the intersection of experience strategy and product design.</p>
 					<a class="scroll-link" href="#work">Selected work <span class="arrow">&#8595;</span></a>
@@ -61,5 +69,55 @@
 				<div class="footer-row"><span>© 2026 Carl Hoffnagle</span><a href="#top">Back to top &#8593;</a></div>
 			</section>
 		</main>
+		<script>
+			const weatherReading = document.querySelector("#weather-reading");
+			const weatherCondition = document.querySelector("#weather-condition");
+			const weatherIcon = document.querySelector("#weather-icon");
+			const hero = document.querySelector(".hero");
+
+			const weatherCodes = {
+				0: ["☀️", "Clear sky"], 1: ["🌤️", "Mainly clear"], 2: ["⛅", "Partly cloudy"], 3: ["☁️", "Overcast"],
+				45: ["🌫️", "Foggy"], 48: ["🌫️", "Rime fog"], 51: ["🌦️", "Light drizzle"], 53: ["🌦️", "Drizzle"], 55: ["🌧️", "Heavy drizzle"],
+				56: ["🌧️", "Freezing drizzle"], 57: ["🌧️", "Heavy freezing drizzle"], 61: ["🌦️", "Light rain"], 63: ["🌧️", "Rain"], 65: ["🌧️", "Heavy rain"],
+				66: ["🌧️", "Freezing rain"], 67: ["🌧️", "Heavy freezing rain"], 71: ["🌨️", "Light snow"], 73: ["🌨️", "Snow"], 75: ["❄️", "Heavy snow"],
+				77: ["❄️", "Snow grains"], 80: ["🌦️", "Rain showers"], 81: ["🌧️", "Rain showers"], 82: ["⛈️", "Heavy rain showers"], 85: ["🌨️", "Snow showers"],
+				86: ["🌨️", "Heavy snow showers"], 95: ["⛈️", "Thunderstorm"], 96: ["⛈️", "Thunderstorm with hail"], 99: ["⛈️", "Thunderstorm with heavy hail"]
+			};
+
+			function showWeatherError(message) {
+				weatherReading.textContent = "Weather unavailable";
+				weatherCondition.textContent = message;
+				weatherIcon.textContent = "—";
+			}
+
+			function setWeatherArtwork(code) {
+				const weatherType = code >= 71 && code <= 86 ? "snow" : code >= 51 && code <= 67 || code >= 80 ? "rain" : code >= 3 && code <= 48 ? "cloud" : "sunny";
+				hero.className = `hero hero-weather-${weatherType}`;
+			}
+
+			async function loadWeather(position) {
+				const { latitude, longitude } = position.coords;
+				const params = new URLSearchParams({ latitude, longitude, current: "temperature_2m,weather_code", temperature_unit: "fahrenheit", timezone: "auto" });
+
+				try {
+					const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+					if (!response.ok) throw new Error("Weather request failed");
+					const data = await response.json();
+					const [icon, condition] = weatherCodes[data.current.weather_code] || ["🌡️", "Current conditions"];
+					setWeatherArtwork(data.current.weather_code);
+					weatherIcon.textContent = icon;
+					weatherReading.textContent = `${Math.round(data.current.temperature_2m)}°F`;
+					weatherCondition.textContent = condition;
+				} catch (error) {
+					showWeatherError("Please try again later");
+				}
+			}
+
+			if ("geolocation" in navigator) {
+				navigator.geolocation.getCurrentPosition(loadWeather, () => showWeatherError("Enable location to see your weather."));
+			} else {
+				showWeatherError("Location is not supported");
+			}
+		</script>
 	</body>
 </html>
