@@ -95,6 +95,11 @@
 				hero.className = `hero hero-weather-${weatherType}`;
 			}
 
+			function isNightTime(localTime) {
+				const hour = Number(localTime.slice(11, 13));
+				return hour >= 20 || hour < 5;
+			}
+
 			async function loadWeather(position) {
 				const { latitude, longitude } = position.coords;
 				const params = new URLSearchParams({ latitude, longitude, current: "temperature_2m,weather_code", temperature_unit: "fahrenheit", timezone: "auto" });
@@ -103,8 +108,12 @@
 					const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
 					if (!response.ok) throw new Error("Weather request failed");
 					const data = await response.json();
-					const [icon, condition] = weatherCodes[data.current.weather_code] || ["🌡️", "Current conditions"];
-					setWeatherArtwork(data.current.weather_code);
+					const weatherCode = data.current.weather_code;
+					const [dayIcon, condition] = weatherCodes[weatherCode] || ["🌡️", "Current conditions"];
+					const night = isNightTime(data.current.time);
+					const nightIcons = { 0: "🌙", 1: "🌙", 2: "🌙☁️", 3: "☁️" };
+					const icon = night ? (nightIcons[weatherCode] || dayIcon) : dayIcon;
+					setWeatherArtwork(weatherCode);
 					weatherIcon.textContent = icon;
 					weatherReading.textContent = `${Math.round(data.current.temperature_2m)}°F`;
 					weatherCondition.textContent = condition;

@@ -46,7 +46,7 @@ h2 { font-size: clamp(36px, 4.5vw, 66px); letter-spacing: -.045em; }
 .hero-weather-snow::before { width: 19vw; height: 19vw; right: 23vw; top: 16vw; border-radius: 18%; opacity: .9; transform: rotate(45deg); box-shadow: 7vw 5vw 0 -2vw var(--weather-detail), -5vw 7vw 0 -3vw var(--weather-detail); }
 .hero-copy { position: relative; z-index: 1; max-width: 1050px; }
 h1 { margin: 20px 0 22px; max-width: 960px; font-size: clamp(54px, 8.8vw, 137px); letter-spacing: -.055em; line-height: .91; }
-.weather-card { position: relative; z-index: 1; align-self: flex-end; width: min(100%, 260px); margin: 22px 8vw 30px 0; padding: 18px 20px 20px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); }
+.weather-card { position: relative; z-index: 1; align-self: flex-end; width: min(100%, 260px); margin: 22px 8vw 30px 0; padding: 18px 20px 20px; border: 0; background: linear-gradient(90deg, rgba(243, 241, 235, .5), rgba(243, 241, 235, .35)); color: var(--ink); }
 .weather-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .weather-icon { font-size: 29px; line-height: .9; }
 .weather-reading { margin-top: 22px; font-size: 42px; line-height: .95; letter-spacing: -.05em; }
